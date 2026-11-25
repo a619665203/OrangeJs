@@ -1,0 +1,129 @@
+# Clash Party 精简配置 —— 纯英文节点名，排除特殊字符兼容问题
+port: 7890
+socks-port: 7891
+mixed-port: 7892
+mode: rule
+log-level: info
+
+proxies:
+  - name: US02
+    type: http
+    server: 38.28.193.188
+    port: 443
+    skip-cert-verify: true
+    tls: true
+  - name: NL01
+    type: http
+    server: 84.17.47.150
+    port: 9002
+    skip-cert-verify: true
+    tls: true
+  - name: NL03
+    type: http
+    server: 5.255.118.82
+    port: 443
+    skip-cert-verify: true
+    tls: true
+  - name: NL04
+    type: http
+    server: 84.17.47.147
+    port: 9002
+    skip-cert-verify: true
+    tls: true
+  - name: US03
+    type: http
+    server: 209.148.53.153
+    port: 8090
+    skip-cert-verify: true
+    tls: true
+  - name: NL02
+    type: http
+    server: 51.159.225.196
+    port: 23856
+    skip-cert-verify: true
+    tls: true
+  - name: DE01
+    type: hysteria
+    server: 5.83.129.90
+    port: 54177
+    skip-cert-verify: true
+    udp: true
+    sni: apple.com
+    alpn:
+      - h3
+    auth-str: dongtaiwang.com
+    up: 500
+    down: 1000
+  - name: DE02
+    type: vless
+    network: ws
+    uuid: 313b84fa-b922-500f-9b65-acb67c040cc0
+    server: 185.197.193.137
+    port: 443
+    tls: true
+    skip-cert-verify: false
+    servername: us2.v2less.site
+    client-fingerprint: chrome
+    ws-opts:
+      path: /vless
+      headers:
+        Host: us2.v2less.site
+  - name: US01
+    type: vmess
+    server: 192.74.236.148
+    port: 30004
+    uuid: 418048af-a293-4b99-9b0c-98ca3580dd24
+    alterId: 64
+    cipher: auto
+    tls: true
+    skip-cert-verify: true
+    network: ws
+    ws-opts:
+      path: /path/1733477783705
+      headers:
+        Host: www.91334565.xyz
+  - name: IR01
+    type: vless
+    network: tcp
+    uuid: 667016ca-f02e-4b5f-bfc3-3d8ed81e9bec
+    server: 194.60.228.97
+    port: 443
+    tls: true
+    servername: base.hosamobenl.co.uk
+    client-fingerprint: chrome
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - AUTO
+      - US02
+      - NL01
+      - NL03
+      - NL04
+      - US03
+      - NL02
+      - DE01
+      - DE02
+      - US01
+      - IR01
+      - DIRECT
+  - name: AUTO
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - US02
+      - NL01
+      - NL03
+      - NL04
+      - US03
+      - DE01
+
+rules:
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT
+  - IP-CIDR,10.0.0.0/8,DIRECT
+  - IP-CIDR,172.16.0.0/12,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,PROXY
